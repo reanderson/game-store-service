@@ -1,0 +1,505 @@
+openapi: 3.0.0
+info:
+  title: Capstone - Game store
+  description: A REST API for a store that sells games, consoles, and t-shirts
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:8080'
+    description: Local Dev Host
+paths:
+  /game:
+    get: 
+      summary: "gets all games"
+      responses: 
+        '200':
+          description: "returns a list of all games in the store's database"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+    post:
+      summary: "adds a new game"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Game'
+      responses:
+        '201':
+          description: "adds the game to the database"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: "bad input"
+  /game/studio/{studio}:
+    get:
+      summary: "gets games by studio"
+      parameters: 
+        - name: studio
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns all games from studio {studio}, or an empty array if none exist"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+  /game/esrb/{esrb}:
+    get:
+      summary: "gets games by ESRB rating"
+      parameters: 
+        - name: esrb
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns all games rated {esrb}, or an empty array if none exist"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+  /game/title/{title}:
+    get:
+      summary: "gets games by title"
+      description: "If the entered title is in the game's title, it'll be returned as part of the array"
+      parameters: 
+        - name: title
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns all games with title including {title}, or an empty array if none exist"
+          content:
+            application/schema:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+  /game/{id}:
+    get:
+      summary: "gets game with id id"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "returns the game with id {id}"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "no game of id {id} exists"
+    put:
+      summary: "updates game"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Game'
+      responses:
+        '200':
+          description: "updates the game and returns updated game"
+          content:
+            applicaiton/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "no game of id {id} exists"
+    delete:
+      summary: "deletes game"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "game deleted"
+        '404':
+          description: "no game of id {id} exists"
+          
+  /console:
+    get: 
+      summary: "gets all consoles"
+      responses: 
+        '200':
+          description: "returns a list of all consoles in the store's database"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Console'
+    post:
+      summary: "adds a new console"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Console'
+      responses:
+        '201':
+          description: "adds the consoole to the database"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Console'
+        '400':
+          description: "bad input"
+  /console/manufacturer/{manu}:
+    get:
+      summary: "gets all consoles by manufacturer"
+      parameters:
+        - name: manu
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns all consoles with manufacturer manu"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Console'
+  /console/{id}:
+    get:
+      summary: "gets console with id id"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "returns the console with id {id}"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Console'
+        '404':
+          description: "no console of id {id} exists"
+    put:
+      summary: "updates console"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Console'
+      responses:
+        '200':
+          description: "updates the console and returns updated console"
+          content:
+            applicaiton/json:
+              schema:
+                $ref: '#/components/schemas/Console'
+        '404':
+          description: "no console of id {id} exists"
+    delete:
+      summary: "deletes console"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "console deleted"
+        '404':
+          description: "no console of id {id} exists"
+          
+  /tshirt:
+    get: 
+      summary: "gets all tshirts"
+      responses: 
+        '200':
+          description: "returns a list of all tshirts in the store's database"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+    post:
+      summary: "adds a new shirt"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TShirt'
+      responses:
+        '201':
+          description: "adds the shirt to the database"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+        '400':
+          description: "bad input"
+  /tshirt/color/{color}:
+    get: 
+      summary: "gets all tshirts of color color"
+      parameters: 
+        - name: color
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns a list of tshirts of color color, or empty array"
+          content:
+            applcation/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+  /tshirt/size/{size}:
+    get:
+      summary: "gets all tshirts of size size"
+      parameters: 
+        - name: size
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "returns list of tshirts of size size or empty array"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+  /tshirt/{id}:
+    get:
+      summary: "gets tshirt with id id"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "returns the tshirt with id {id}"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+        '404':
+          description: "no tshirt of id {id} exists"
+    put:
+      summary: "updates tshirt"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TShirt'
+      responses:
+        '200':
+          description: "updates the tshirt and returns updated tshirt"
+          content:
+            applicaiton/json:
+              schema:
+                $ref: '#/components/schemas/TShirt'
+        '404':
+          description: "no tshirt of id {id} exists"
+    delete:
+      summary: "deletes tshirt"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: "tshirt deleted"
+        '404':
+          description: "no tshirt of id {id} exists"
+
+  /purchase:
+    post:
+      summary: "make an order"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: "Order is good, and returns an invoice"
+          content:
+            applicationo/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          description: "Invalid request. Should return information on just what went wrong."
+          
+            
+components:
+  schemas:
+    Game:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        esrbRating:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        studio:
+          type: string
+        quantity:
+          type: number
+    Console:
+      type: object
+      properties:
+        id:
+          type: number
+        model:
+          type: string
+        manufacturer:
+          type: string
+        memoryAmount:
+          type: string
+        processor:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: number
+    TShirt:
+      type: object
+      properties:
+        id:
+          type: number
+        size:
+          type: string
+        color:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: number
+    Order:
+      type: object
+      properties:
+        name:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        itemType:
+          type: string
+        itemId:
+          type: number
+        quantity:
+          type: number
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        street:
+          type: string
+        city: 
+          type: string
+        state:
+          type: string
+        zipCode:
+          type: string
+        itemType: 
+          type: string
+        itemId:
+          type: number
+        unitPrice:
+          type: number
+        quantity:
+          type: number
+        subtotal:
+          type: number
+        tax:
+          type: number
+        processingFee:
+          type: number
+        total:
+          type: number
